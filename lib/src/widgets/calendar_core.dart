@@ -32,37 +32,43 @@ class CalendarCore extends StatelessWidget {
   final PageController? pageController;
   final ScrollPhysics? scrollPhysics;
   final _OnCalendarPageChanged onPageChanged;
+  final Axis? scrollDirection;
+  final bool? allowImplicitScrolling;
 
-  const CalendarCore({
-    Key? key,
-    this.dowBuilder,
-    required this.dayBuilder,
-    required this.onPageChanged,
-    required this.firstDay,
-    required this.lastDay,
-    required this.constraints,
-    this.dowHeight,
-    this.rowHeight,
-    this.startingDayOfWeek = StartingDayOfWeek.sunday,
-    this.calendarFormat = CalendarFormat.month,
-    this.pageController,
-    this.focusedDay,
-    this.previousIndex,
-    this.sixWeekMonthsEnforced = false,
-    this.dowVisible = true,
-    this.weekNumberBuilder,
-    required this.weekNumbersVisible,
-    this.dowDecoration,
-    this.rowDecoration,
-    this.tableBorder,
-    this.tablePadding,
-    this.scrollPhysics,
-  })  : assert(!dowVisible || (dowHeight != null && dowBuilder != null)),
+  const CalendarCore(
+      {Key? key,
+      this.dowBuilder,
+      required this.dayBuilder,
+      required this.onPageChanged,
+      required this.firstDay,
+      required this.lastDay,
+      required this.constraints,
+      this.dowHeight,
+      this.rowHeight,
+      this.startingDayOfWeek = StartingDayOfWeek.sunday,
+      this.calendarFormat = CalendarFormat.month,
+      this.pageController,
+      this.focusedDay,
+      this.previousIndex,
+      this.sixWeekMonthsEnforced = false,
+      this.dowVisible = true,
+      this.weekNumberBuilder,
+      required this.weekNumbersVisible,
+      this.dowDecoration,
+      this.rowDecoration,
+      this.tableBorder,
+      this.tablePadding,
+      this.scrollPhysics,
+      this.scrollDirection,
+      this.allowImplicitScrolling})
+      : assert(!dowVisible || (dowHeight != null && dowBuilder != null)),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
+      scrollDirection: this.scrollDirection ?? Axis.vertical,
+      allowImplicitScrolling: this.allowImplicitScrolling ?? true,
       controller: pageController,
       physics: scrollPhysics,
       itemCount: _getPageCount(calendarFormat, firstDay, lastDay),
