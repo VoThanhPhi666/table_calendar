@@ -204,63 +204,67 @@ class TableCalendar<T> extends StatefulWidget {
   /// Called when the calendar is created. Exposes its PageController.
   final void Function(PageController pageController)? onCalendarCreated;
 
+  /// can vertical scroll
+  final bool? canVerticalScroll;
+
   /// Creates a `TableCalendar` widget.
-  TableCalendar({
-    Key? key,
-    required DateTime focusedDay,
-    required DateTime firstDay,
-    required DateTime lastDay,
-    DateTime? currentDay,
-    this.locale,
-    this.rangeStartDay,
-    this.rangeEndDay,
-    this.weekendDays = const [DateTime.saturday, DateTime.sunday],
-    this.calendarFormat = CalendarFormat.month,
-    this.availableCalendarFormats = const {
-      CalendarFormat.month: 'Month',
-      CalendarFormat.twoWeeks: '2 weeks',
-      CalendarFormat.week: 'Week',
-    },
-    this.headerVisible = true,
-    this.daysOfWeekVisible = true,
-    this.pageJumpingEnabled = false,
-    this.pageAnimationEnabled = true,
-    this.sixWeekMonthsEnforced = false,
-    this.shouldFillViewport = false,
-    this.weekNumbersVisible = false,
-    this.rowHeight = 52.0,
-    this.daysOfWeekHeight = 16.0,
-    this.formatAnimationDuration = const Duration(milliseconds: 200),
-    this.formatAnimationCurve = Curves.linear,
-    this.pageAnimationDuration = const Duration(milliseconds: 300),
-    this.pageAnimationCurve = Curves.easeOut,
-    this.startingDayOfWeek = StartingDayOfWeek.sunday,
-    this.dayHitTestBehavior = HitTestBehavior.opaque,
-    this.availableGestures = AvailableGestures.all,
-    this.simpleSwipeConfig = const SimpleSwipeConfig(
-      verticalThreshold: 25.0,
-      swipeDetectionBehavior: SwipeDetectionBehavior.continuousDistinct,
-    ),
-    this.headerStyle = const HeaderStyle(),
-    this.daysOfWeekStyle = const DaysOfWeekStyle(),
-    this.calendarStyle = const CalendarStyle(),
-    this.calendarBuilders = const CalendarBuilders(),
-    this.rangeSelectionMode = RangeSelectionMode.toggledOff,
-    this.eventLoader,
-    this.enabledDayPredicate,
-    this.selectedDayPredicate,
-    this.holidayPredicate,
-    this.onRangeSelected,
-    this.onDaySelected,
-    this.onDayLongPressed,
-    this.onDisabledDayTapped,
-    this.onDisabledDayLongPressed,
-    this.onHeaderTapped,
-    this.onHeaderLongPressed,
-    this.onPageChanged,
-    this.onFormatChanged,
-    this.onCalendarCreated,
-  })  : assert(availableCalendarFormats.keys.contains(calendarFormat)),
+  TableCalendar(
+      {Key? key,
+      required DateTime focusedDay,
+      required DateTime firstDay,
+      required DateTime lastDay,
+      DateTime? currentDay,
+      this.locale,
+      this.rangeStartDay,
+      this.rangeEndDay,
+      this.weekendDays = const [DateTime.saturday, DateTime.sunday],
+      this.calendarFormat = CalendarFormat.month,
+      this.availableCalendarFormats = const {
+        CalendarFormat.month: 'Month',
+        CalendarFormat.twoWeeks: '2 weeks',
+        CalendarFormat.week: 'Week',
+      },
+      this.headerVisible = true,
+      this.daysOfWeekVisible = true,
+      this.pageJumpingEnabled = false,
+      this.pageAnimationEnabled = true,
+      this.sixWeekMonthsEnforced = false,
+      this.shouldFillViewport = false,
+      this.weekNumbersVisible = false,
+      this.rowHeight = 52.0,
+      this.daysOfWeekHeight = 16.0,
+      this.formatAnimationDuration = const Duration(milliseconds: 200),
+      this.formatAnimationCurve = Curves.linear,
+      this.pageAnimationDuration = const Duration(milliseconds: 300),
+      this.pageAnimationCurve = Curves.easeOut,
+      this.startingDayOfWeek = StartingDayOfWeek.sunday,
+      this.dayHitTestBehavior = HitTestBehavior.opaque,
+      this.availableGestures = AvailableGestures.all,
+      this.simpleSwipeConfig = const SimpleSwipeConfig(
+        verticalThreshold: 25.0,
+        swipeDetectionBehavior: SwipeDetectionBehavior.continuousDistinct,
+      ),
+      this.headerStyle = const HeaderStyle(),
+      this.daysOfWeekStyle = const DaysOfWeekStyle(),
+      this.calendarStyle = const CalendarStyle(),
+      this.calendarBuilders = const CalendarBuilders(),
+      this.rangeSelectionMode = RangeSelectionMode.toggledOff,
+      this.eventLoader,
+      this.enabledDayPredicate,
+      this.selectedDayPredicate,
+      this.holidayPredicate,
+      this.onRangeSelected,
+      this.onDaySelected,
+      this.onDayLongPressed,
+      this.onDisabledDayTapped,
+      this.onDisabledDayLongPressed,
+      this.onHeaderTapped,
+      this.onHeaderLongPressed,
+      this.onPageChanged,
+      this.onFormatChanged,
+      this.onCalendarCreated,
+      this.canVerticalScroll = true})
+      : assert(availableCalendarFormats.keys.contains(calendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
         assert(weekendDays.isNotEmpty
             ? weekendDays.every(
@@ -479,91 +483,91 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
         Flexible(
           flex: widget.shouldFillViewport ? 1 : 0,
           child: TableCalendarBase(
-            onCalendarCreated: (pageController) {
-              _pageController = pageController;
-              widget.onCalendarCreated?.call(pageController);
-            },
-            focusedDay: _focusedDay.value,
-            calendarFormat: widget.calendarFormat,
-            availableGestures: widget.availableGestures,
-            firstDay: widget.firstDay,
-            lastDay: widget.lastDay,
-            startingDayOfWeek: widget.startingDayOfWeek,
-            dowDecoration: widget.daysOfWeekStyle.decoration,
-            rowDecoration: widget.calendarStyle.rowDecoration,
-            tableBorder: widget.calendarStyle.tableBorder,
-            tablePadding: widget.calendarStyle.tablePadding,
-            dowVisible: widget.daysOfWeekVisible,
-            dowHeight: widget.daysOfWeekHeight,
-            rowHeight: widget.rowHeight,
-            formatAnimationDuration: widget.formatAnimationDuration,
-            formatAnimationCurve: widget.formatAnimationCurve,
-            pageAnimationEnabled: widget.pageAnimationEnabled,
-            pageAnimationDuration: widget.pageAnimationDuration,
-            pageAnimationCurve: widget.pageAnimationCurve,
-            availableCalendarFormats: widget.availableCalendarFormats,
-            simpleSwipeConfig: widget.simpleSwipeConfig,
-            sixWeekMonthsEnforced: widget.sixWeekMonthsEnforced,
-            onVerticalSwipe: _swipeCalendarFormat,
-            onPageChanged: (focusedDay) {
-              _focusedDay.value = focusedDay;
-              widget.onPageChanged?.call(focusedDay);
-            },
-            weekNumbersVisible: widget.weekNumbersVisible,
-            weekNumberBuilder: (BuildContext context, DateTime day) {
-              final weekNumber = _calculateWeekNumber(day);
-              Widget? cell = widget.calendarBuilders.weekNumberBuilder
-                  ?.call(context, weekNumber);
+              onCalendarCreated: (pageController) {
+                _pageController = pageController;
+                widget.onCalendarCreated?.call(pageController);
+              },
+              focusedDay: _focusedDay.value,
+              calendarFormat: widget.calendarFormat,
+              availableGestures: widget.availableGestures,
+              firstDay: widget.firstDay,
+              lastDay: widget.lastDay,
+              startingDayOfWeek: widget.startingDayOfWeek,
+              dowDecoration: widget.daysOfWeekStyle.decoration,
+              rowDecoration: widget.calendarStyle.rowDecoration,
+              tableBorder: widget.calendarStyle.tableBorder,
+              tablePadding: widget.calendarStyle.tablePadding,
+              dowVisible: widget.daysOfWeekVisible,
+              dowHeight: widget.daysOfWeekHeight,
+              rowHeight: widget.rowHeight,
+              formatAnimationDuration: widget.formatAnimationDuration,
+              formatAnimationCurve: widget.formatAnimationCurve,
+              pageAnimationEnabled: widget.pageAnimationEnabled,
+              pageAnimationDuration: widget.pageAnimationDuration,
+              pageAnimationCurve: widget.pageAnimationCurve,
+              availableCalendarFormats: widget.availableCalendarFormats,
+              simpleSwipeConfig: widget.simpleSwipeConfig,
+              sixWeekMonthsEnforced: widget.sixWeekMonthsEnforced,
+              onVerticalSwipe: _swipeCalendarFormat,
+              onPageChanged: (focusedDay) {
+                _focusedDay.value = focusedDay;
+                widget.onPageChanged?.call(focusedDay);
+              },
+              weekNumbersVisible: widget.weekNumbersVisible,
+              weekNumberBuilder: (BuildContext context, DateTime day) {
+                final weekNumber = _calculateWeekNumber(day);
+                Widget? cell = widget.calendarBuilders.weekNumberBuilder
+                    ?.call(context, weekNumber);
 
-              if (cell == null) {
-                cell = Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Center(
-                    child: Text(
-                      weekNumber.toString(),
-                      style: widget.calendarStyle.weekNumberTextStyle,
+                if (cell == null) {
+                  cell = Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Center(
+                      child: Text(
+                        weekNumber.toString(),
+                        style: widget.calendarStyle.weekNumberTextStyle,
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              return cell;
-            },
-            dowBuilder: (BuildContext context, DateTime day) {
-              Widget? dowCell =
-                  widget.calendarBuilders.dowBuilder?.call(context, day);
+                return cell;
+              },
+              dowBuilder: (BuildContext context, DateTime day) {
+                Widget? dowCell =
+                    widget.calendarBuilders.dowBuilder?.call(context, day);
 
-              if (dowCell == null) {
-                final weekdayString = widget.daysOfWeekStyle.dowTextFormatter
-                        ?.call(day, widget.locale) ??
-                    DateFormat.E(widget.locale).format(day);
+                if (dowCell == null) {
+                  final weekdayString = widget.daysOfWeekStyle.dowTextFormatter
+                          ?.call(day, widget.locale) ??
+                      DateFormat.E(widget.locale).format(day);
 
-                final isWeekend =
-                    _isWeekend(day, weekendDays: widget.weekendDays);
+                  final isWeekend =
+                      _isWeekend(day, weekendDays: widget.weekendDays);
 
-                dowCell = Center(
-                  child: ExcludeSemantics(
-                    child: Text(
-                      weekdayString,
-                      style: isWeekend
-                          ? widget.daysOfWeekStyle.weekendStyle
-                          : widget.daysOfWeekStyle.weekdayStyle,
+                  dowCell = Center(
+                    child: ExcludeSemantics(
+                      child: Text(
+                        weekdayString,
+                        style: isWeekend
+                            ? widget.daysOfWeekStyle.weekendStyle
+                            : widget.daysOfWeekStyle.weekdayStyle,
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              return dowCell;
-            },
-            dayBuilder: (context, day, focusedMonth) {
-              return GestureDetector(
-                behavior: widget.dayHitTestBehavior,
-                onTap: () => _onDayTapped(day),
-                onLongPress: () => _onDayLongPressed(day),
-                child: _buildCell(day, focusedMonth),
-              );
-            },
-          ),
+                return dowCell;
+              },
+              dayBuilder: (context, day, focusedMonth) {
+                return GestureDetector(
+                  behavior: widget.dayHitTestBehavior,
+                  onTap: () => _onDayTapped(day),
+                  onLongPress: () => _onDayLongPressed(day),
+                  child: _buildCell(day, focusedMonth),
+                );
+              },
+              canVerticalScroll: widget.canVerticalScroll),
         ),
       ],
     );
